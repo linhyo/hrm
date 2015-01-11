@@ -55,3 +55,4 @@ ChangeLog
 
 # Temp db
 *.db
+db.sqlite3
