@@ -386,3 +386,54 @@ jQuery.fn.swap = function(b){
 	t.parentNode.removeChild(t);
 	return this;
 };
+
+//
+//  Dynamically load  jQuery Timepicker plugin
+//  homepage: http://trentrichardson.com/examples/timepicker/
+//
+function LoadTimePickerScript(callback){
+	if (!$.fn.timepicker){
+		$.getScript(STATIC + 'plugins/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.min.js', callback);
+	}
+	else {
+		if (callback && typeof(callback) === "function") {
+			callback();
+		}
+	}
+}
+
+// Open Modal
+function OpenMeetingModal() {
+    $('.event-block').on('click', function(evt) {
+        // Retrieve meeting data
+        var meeting_json =  $(evt.currentTarget).data('json');
+        console.log(meeting_json);
+        // Update modal data
+        var modal = $('#myModal');
+        var location_input = modal.find('input#inputLocation');
+        var purpose_input = modal.find('textarea#inputPurpose');
+        var date_input = modal.find('input[name="date"]');
+        var time_input = modal.find('input[name="time"]');
+        var delete_button = modal.find('a.delete_item');
+        var update_form = modal.find('form');
+
+        location_input.val(meeting_json.location);
+        purpose_input.val(meeting_json.purpose);
+        date_input.val(meeting_json.date);
+        time_input.val(meeting_json.time);
+        var delete_link = delete_button.attr('href');
+        delete_button.attr('href', delete_link.replace(0, meeting_json.id));
+        var action = update_form.attr('action');
+        update_form.attr('action', action.replace(0, meeting_json.id));
+        // Attendants
+        var attendants_input = modal.find('input#inputAttandants');
+        attendants_input.tagsinput('removeAll');
+        var attendants_data = meeting_json.attendants.split(",");
+        for (i = 0; i < attendants_data.length; i++) {
+            attendants_input.tagsinput('add', staff_objects[attendants_data[i]]);
+        }
+
+        // Display modal
+        modal.modal('show');
+    });
+}

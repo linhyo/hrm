@@ -1,6 +1,7 @@
 {% extends "vietskill/base.html" %}
 
 {% load staticfiles %}
+{% load extra_tags %}
 
 {% block title %} Meeting {% endblock %}
 
@@ -47,15 +48,27 @@
                         {% for col in row %}
                         <!-- An event block -->
                         <div class="col-xs-4">
-                            <div class="event-block"  data-toggle="modal" data-target="#myModal">
-                                <div class="event-time pull-left">
+                        <!--
+                            <div class="event-block"  data-toggle="modal" data-target="#myModal"
+                          -->
+                          <div class="event-block"
+
+                                data-json='{ "id": {{ col.id }},
+                                "date": "{{ col.date_time|date:"m/d/o" }}",
+                                "time": "{{ col.date_time|time:"G:i"  }}",
+                                "location": "{{ col.location }}",
+                                "purpose": "{{ col.purpose }}",
+                                "attendants": "{{ col.attendants }}"}'>
+                                <div class="event-time color{{ col.id|mod:5 }} pull-left">
                                     <span class="uppercase"><b> {{ col.date_time|date:"D, M" }} </b></span> <br/>
                                     <span class="event-day"><b> {{ col.date_time|date:"d" }}</b></span><br />
                                     <span class="event-hour">{{ col.date_time|time:"P" }}</span>
                                 </div>
-                                <p class="event-detail pull-left"><b class="event-room">{{ col.location }}</b>
-                                {{ col.purpose }}<br />
-                                <a href="hails@vccloud.vn">hails</a>, <a href="hails@vccloud.vn">vodoi</a>, <a href="hails@vccloud.vn">deptrai</a>
+                                <p class="event-detail pull-left"><b class="event-room">{{ col.purpose }}</b>
+                                {{ col.location }}<br />
+                                {%  for p in col.meetingpaticipant_set.all %}
+                                    <a href="{{ p.email }}">{{ p.name }}</a>
+                                {% endfor %}
                                 </p>
                             </div>
                         </div>
@@ -80,7 +93,8 @@
     <!-- Form -->
     <div class="row">
         <div class="col-lg-12">
-            <form class="event-form">
+            <form action="{% url 'new_meeting' %}" class="event-form" method="POST">
+            {% csrf_token %}
 
             <div class="row">
                 <div class="col-lg-12">
@@ -89,18 +103,18 @@
                       <div class="col-lg-6">
                         <div class="form-group">
                             <label for="inputLocation">Location</label>
-                            <input type="text" class="form-control" id="inputLocation" placeholder="Enter location">
+                            <input type="text" class="form-control" name="location" id="inputLocation" placeholder="Enter location">
                         </div>
                       </div>
 
                       <div class="col-lg-6">
-                          <label for="inputTime">Session time</label>
+                          <label for="inputTime">Date Time</label>
                           <div class="form-inline">
                               <div class="form-group">
-                                <input type="datetime" class="form-control" id="inputStartTime" placeholder="Start time">
+                                <input type="text" id="input_date" name="date" class="form-control" placeholder="Date">
                               </div>
                               <div class="form-group">
-                                <input type="datetime" class="form-control" id="inputEndTime" placeholder="End time">
+                                <input type="text" id="input_time" name="time" class="form-control" placeholder="Time">
                               </div>
                           </div>
                       </div>
@@ -115,7 +129,7 @@
                           <div class="col-lg-6">
                               <div class="form-group">
                                 <label for="inputTime">Purpose</label>
-                                <textarea class="form-control" id="inputPurpose" placeholder="Enter meeting notes" rows="3"></textarea>
+                                <textarea class="form-control" name="purpose" id="inputPurpose" placeholder="Enter meeting notes" rows="3"></textarea>
                               </div>
 
                           </div>
@@ -123,7 +137,7 @@
                           <div class="col-lg-6">
                               <label for="inputTime">Attendants</label>
                               <div class="form-group">
-                                <input type="text" data-role="tagsinput" class="form-control" id="inputAttandants" placeholder="Enter people" />
+                                <input type="text" data-role="tagsinput" name="attendants" class="form-control" id="inputAttandants" placeholder="Enter people" />
                               </div>
                           </div>
                     </div>
@@ -140,7 +154,8 @@
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-                  <form class="event-form">
+      <form class="event-form" method="POST" action="{% url 'update_meeting' pk=0 %}">
+      {% csrf_token %}
 
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -156,18 +171,18 @@
                       <div class="col-lg-6">
                         <div class="form-group">
                             <label for="inputLocation">Location</label>
-                            <input type="text" class="form-control" id="inputLocation" placeholder="Enter location">
+                            <input type="text" name="location" class="form-control" id="inputLocation" placeholder="Enter location">
                         </div>
                       </div>
 
                       <div class="col-lg-6">
-                          <label for="inputTime">Session time</label>
+                          <label for="inputTime">Date Time</label>
                           <div class="form-inline">
                               <div class="form-group">
-                                <input type="datetime" class="form-control" id="inputStartTime" placeholder="Start time">
+                                <input type="text" name="date" class="form-control" placeholder="Date">
                               </div>
                               <div class="form-group">
-                                <input type="datetime" class="form-control" id="inputEndTime" placeholder="End time">
+                                <input type="text" name="time" class="form-control" placeholder="Time">
                               </div>
                           </div>
                       </div>
@@ -181,7 +196,7 @@
                           <div class="col-lg-6">
                               <div class="form-group">
                                 <label for="inputTime">Purpose</label>
-                                <textarea class="form-control" id="inputPurpose" placeholder="Enter meeting notes" rows="3"></textarea>
+                                <textarea class="form-control" name="purpose" id="inputPurpose" placeholder="Enter meeting notes" rows="3"></textarea>
                               </div>
 
                           </div>
@@ -189,77 +204,83 @@
                           <div class="col-lg-6">
                               <label for="inputTime">Attendants</label>
                               <div class="form-group">
-                                <input type="text" data-role="tagsinput" class="form-control" id="inputAttandants" placeholder="Enter people" />
+                                <input type="text" data-role="tagsinput" name="attendants" class="form-control" id="inputAttandants" placeholder="Enter people" />
                               </div>
                           </div>
                     </div>
               </div>
 
-              <hr/>
-        </form>
 
-      </div>
+
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Save changes</button>
-        <button type="button" class="btn btn-danger">Delete</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+        <a href="{% url 'delete_meeting' pk=0 %}" type="button" class="btn btn-danger delete_item">Delete</a>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
-      </form>
     </div>
+    </form>
+
   </div>
 </div>
 
 
+
+<script src="{% static 'plugins/jquery-ui/jquery-ui.min.js' %}"></script>
+
 <script>
-var data = [ { "value": 1 , "text": "Amsterdam" , "continent": "Europe" },
-{ "value": 2 , "text": "London" , "continent": "Europe" },
-{ "value": 3 , "text": "Paris" , "continent": "Europe" },
-{ "value": 4 , "text": "Washington" , "continent": "America" },
-{ "value": 5 , "text": "Mexico City" , "continent": "America" },
-{ "value": 6 , "text": "Buenos Aires", "continent": "America" },
-{ "value": 7 , "text": "Sydney" , "continent": "Australia" },
-{ "value": 8 , "text": "Wellington" , "continent": "Australia" },
-{ "value": 9 , "text": "Canberra" , "continent": "Australia" },
-{ "value": 10, "text": "Beijing" , "continent": "Asia" },
-{ "value": 11, "text": "New Delhi" , "continent": "Asia" },
-{ "value": 12, "text": "Kathmandu" , "continent": "Asia" },
-{ "value": 13, "text": "Cairo" , "continent": "Africa" },
-{ "value": 14, "text": "Cape Town" , "continent": "Africa" },
-{ "value": 15, "text": "Kinshasa" , "continent": "Africa" }
-];
-var cities = new Bloodhound({
+// Load Staff data
+var data = [];
+var staff_objects = {};
+{% for staff in staffs  %}
+    var staff_dict = {"value": {{  staff.id }}, "text": "{{  staff.name }}", "email": "{{  staff.email }}" }
+    data.push(staff_dict);
+    staff_objects[String({{  staff.id }})] = staff_dict;
+
+{% endfor %}
+var staff_data = new Bloodhound({
   datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
   queryTokenizer: Bloodhound.tokenizers.whitespace,
   local: data
 });
-cities.initialize();
-
+staff_data.initialize();
 
 var elt = $('input#inputAttandants');
 elt.tagsinput({
   tagClass: function(item) {
-    switch (item.continent) {
-      case 'Europe'   : return 'label label-primary';
-      case 'America'  : return 'label label-danger label-important';
-      case 'Australia': return 'label label-success';
-      case 'Africa'   : return 'label label-default';
-      case 'Asia'     : return 'label label-warning';
+    switch (item.value % 5 + 1) {
+      case 1    : return 'label label-primary';
+      case 2    : return 'label label-danger label-important';
+      case 3    : return 'label label-success';
+      case 4    : return 'label label-default';
+      case 5    : return 'label label-warning';
     }
   },
   itemValue: 'value',
   itemText: 'text',
   typeaheadjs: {
-    name: 'cities',
+    name: 'staff_data',
     displayKey: 'text',
-    source: cities.ttAdapter()
+    source: staff_data.ttAdapter()
   }
 });
-// Load all staffs
-elt.tagsinput('add', { "value": 1 , "text": "Amsterdam"   , "continent": "Europe"    });
-elt.tagsinput('add', { "value": 4 , "text": "Washington"  , "continent": "America"   });
-elt.tagsinput('add', { "value": 7 , "text": "Sydney"      , "continent": "Australia" });
-elt.tagsinput('add', { "value": 10, "text": "Beijing"     , "continent": "Asia"      });
-elt.tagsinput('add', { "value": 13, "text": "Cairo"       , "continent": "Africa"    });
+// Load some staffs
+elt.tagsinput('add', data[0]);
+elt.tagsinput('add', data[1]);
+elt.tagsinput('add', data[2]);
+elt.tagsinput('add', data[3]);
+
+// Run timepicker
+function DemoTimePicker(){
+	$('#input_time').timepicker({setDate: new Date()});
+}
+
+$(document).ready(function() {
+    // Initialize datepicker
+    $('#input_date').datepicker({setDate: new Date()});
+    // Load Timepicker plugin
+    LoadTimePickerScript(DemoTimePicker);
+    OpenMeetingModal()
+})
 
 </script>
 

@@ -17,6 +17,9 @@ from vietskill.schedule import views
 urlpatterns = patterns(
     '',
     url(r'^$', views.meeting_index, name='meeting'),
+    url(r'^meeting/new', views.meeting_new, name='new_meeting'),
+    url(r'^meeting/(?P<pk>[0-9]+)/delete/$', views.meeting_delete, name='delete_meeting'),
+    url(r'^meeting/(?P<pk>[0-9]+)/update/$', views.meeting_update, name='update_meeting'),
     url(r'^meeting/', views.meeting_index, name='meeting'),
     url(r'^plan/', views.plan_index, name='plan'),
     url(r'^event/', views.event_index, name='event'),
