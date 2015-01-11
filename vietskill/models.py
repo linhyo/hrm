@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 
 
 class StaffProfile(models.Model):
@@ -32,11 +33,18 @@ class Statistic(models.Model):
 
 
 class Meeting(models.Model):
-    date = models.DateField()
-    time = models.CharField(max_length=30)
+    date_time = models.DateTimeField(default=datetime.now, blank=True)
     purpose = models.TextField()
     location = models.CharField(max_length=100)
     note = models.TextField()
+
+
+class MeetingPaticipant(models.Model):
+    name = models.CharField(max_length=255)
+    email = models.EmailField()
+    phone = models.CharField(max_length=11)
+    staff_id = models.IntegerField(default=-1, blank=True)
+    meeting = models.ForeignKey(Meeting)
 
 
 class Plan(models.Model):

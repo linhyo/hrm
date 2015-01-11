@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
 from vietskill import views
+from vietskill import schedule
 
 urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
@@ -14,4 +15,6 @@ urlpatterns = patterns('',
     url(r'^profile-detail/(?P<pk>[0-9]+)/$', views.profile_detail, name='profile_detail'),
     url(r'^profile/add/$', views.profile_add, name='profile_add'),
     url(r'^profile/(?P<pk>[0-9]+)/edit/$', views.profile_edit, name='profile_edit'),
+    # Include urls for schedule
+    url(r'^schedule/', include(schedule.urls))
 )

@@ -1,0 +1,265 @@
+{% extends "vietskill/base.html" %}
+
+{% load staticfiles %}
+
+{% block title %} Teaching Schedule {% endblock %}
+{% block content %}
+
+    {# Page Heading #}
+    <div class="row" xmlns="http://www.w3.org/1999/html">
+        <div class="col-lg-12">
+            <h1 class="page-header">Teaching Schedule</h1>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-dashboard"></i> <a href="{% url 'index' %}">Dashboard</a>
+                </li>
+                <li>
+                    <i class="fa fa-gears"></i> <a href="{% url 'event' %}">Schedule</a>
+                </li>
+                <li class="active">
+                    <i class="fa fa-line-chart"></i> Teaching Schedule
+                </li>
+            </ol>
+        </div>
+    </div>{# /.row  #}
+
+<!-- Teaching data table -->
+<div class="row">
+	<div class="col-xs-12">
+		<div class="box">
+			<div class="box-header">
+				<div class="box-name">
+					<span>Teacher's Classes</span>
+				</div>
+				<div class="box-icons">
+					<a class="collapse-link">
+						<i class="fa fa-chevron-up"></i>
+					</a>
+					<a class="expand-link">
+						<i class="fa fa-expand"></i>
+					</a>
+					<a class="close-link">
+						<i class="fa fa-times"></i>
+					</a>
+				</div>
+				<div class="no-move"></div>
+			</div>
+			<div class="box-content no-padding">
+				<table class="table table-bordered table-striped table-hover table-heading table-datatable" id="datatable-3">
+					<thead>
+						<tr>
+							<th>Teacher</th>
+							<th>Monday</th>
+							<th>Tuesday</th>
+							<th>Wednesday</th>
+							<th>Thursday</th>
+							<th>Friday</th>
+							<th>Saturday</th>
+                            <th>Sunday</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><b class="teacher-name">Hails</b><img class="pull-left" src="http://localhost:8080/media/profile_images/s3.png"></td>
+                            <!-- Day sessions -->
+							<td><div data-toggle="modal" data-target="#myModal">
+                                <span class="session1"><span class="class-duration">7:15 - 9:00</span> Life Skill</span>
+                                <span class="session2"><span class="class-duration">9:30 - 11:15</span> Art</span>
+                                <span class="session3"><span class="class-duration">12:30 - 14:15</span> Soft Skill</span>
+                                <span class="session4"><span class="class-duration">14:45 - 16:30</span> Copy Editing</span>
+                                </div>
+                            </td>
+							<td>
+                                <span class="session0"><span class="class-duration">0:00 - 0:00</span> None</span>
+                                <span class="session2"><span class="class-duration">9:30 - 11:15</span> Art</span>
+                                <span class="session3"><span class="class-duration">12:30 - 14:15</span> Soft Skill</span>
+                                <span class="session4"><span class="class-duration">14:45 - 16:30</span> Copy Editing</span>
+							</td>
+							<td>
+                                <span class="session0"><span class="class-duration">0:00 - 0:00</span> None</span>
+                                <span class="session0"><span class="class-duration">9:30 - 11:15</span> Art</span>
+                                <span class="session0"><span class="class-duration">12:30 - 14:15</span> Soft Skill</span>
+                                <span class="session0"><span class="class-duration">14:45 - 16:30</span> Copy Editing</span>
+							</td>
+							<td>
+                                <span class="session0"><span class="class-duration">0:00 - 0:00</span> None</span>
+                                <span class="session0"><span class="class-duration">9:30 - 11:15</span> Art</span>
+                                <span class="session0"><span class="class-duration">12:30 - 14:15</span> Soft Skill</span>
+                                <span class="session0"><span class="class-duration">14:45 - 16:30</span> Copy Editing</span>
+							</td>
+							<td>
+                                <span class="session0"><span class="class-duration">0:00 - 0:00</span> None</span>
+                                <span class="session0"><span class="class-duration">9:30 - 11:15</span> Art</span>
+                                <span class="session0"><span class="class-duration">12:30 - 14:15</span> Soft Skill</span>
+                                <span class="session0"><span class="class-duration">14:45 - 16:30</span> Copy Editing</span>
+							</td>
+							<td>
+                                <span class="session0"><span class="class-duration">0:00 - 0:00</span> None</span>
+                                <span class="session0"><span class="class-duration">9:30 - 11:15</span> Art</span>
+                                <span class="session0"><span class="class-duration">12:30 - 14:15</span> Soft Skill</span>
+                                <span class="session0"><span class="class-duration">14:45 - 16:30</span> Copy Editing</span>
+							</td>
+							<td>
+                                <span class="session0"><span class="class-duration">0:00 - 0:00</span> None</span>
+                                <span class="session0"><span class="class-duration">9:30 - 11:15</span> Art</span>
+                                <span class="session0"><span class="class-duration">12:30 - 14:15</span> Soft Skill</span>
+                                <span class="session0"><span class="class-duration">14:45 - 16:30</span> Copy Editing</span>
+							</td>
+						</tr>
+						<tr>
+							<td>2</td>
+							<td>Debian</td>
+							<td>14.1%</td>
+							<td><i class="fa fa-home"></i><a href="http://debian.org" target="_blank">http://debian.org</a></td>
+							<td>7.4</td>
+							<td><i class="fa fa-linux"></i></td>
+							<td><i class="fa fa-linux"></i></td>
+							<td><i class="fa fa-linux"></i></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+                        <!-- Hidden Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form class="event-form">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Edit Item</h4>
+      </div>
+      <div class="modal-body">
+
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+
+                          <!-- Subject block -->
+                          <div class="col-lg-6">
+                          <label for="inputSubject">Subject</label>
+                          <br>
+                            <select style="width: 90%">
+                              <option>Master of Ceremonies</option>
+                              <option>Life Skill</option>
+                              <option>Art</option>
+                              <option>Soft Skill</option>
+                              <option>Copy Editing</option>
+                              <option>Communication</option>
+                              <option>Culture</option>
+                            </select>
+                          </div>
+                          <!-- End block -->
+
+
+                      <div class="col-lg-6">
+                          <label for="inputDay">Day</label>
+                          <br>
+                            <select style="width: 90%">
+                              <option>Monday </option>
+                              <option>Tuesday</option>
+                              <option>Wednesday</option>
+                              <option>Thursday</option>
+                              <option>Friday</option>
+                              <option>Saturday</option>
+                              <option>Sunday</option>
+                            </select>
+                      </div>
+
+                      </div>
+                    </div>
+                </div>
+
+
+              <div class="rơw">
+                    <div class="row">
+
+                          <div class="col-lg-6">
+                          <label for="inputTeacher">Teacher</label>
+                          <br>
+                            <select style="width: 90%">
+                              <option>Hails</option>
+                              <option>Vo doi</option>
+                              <option>Dep trai</option>
+                            </select>
+
+                          </div>
+
+                     <!-- Status block -->
+                      <div class="col-lg-6">
+                          <label for="inputSession">Session</label>
+                          <br>
+                            <select style="width: 90%">
+                              <option>7:15 - 9:00 </option>
+                              <option>9:30 - 11:15</option>
+                              <option>12:30 - 14:15</option>
+                              <option>14:45 - 16:30</option>
+                            </select>
+                      </div>
+                      <!-- End of block -->
+
+
+
+                    </div>
+                    <div class="row">
+                          <div class="col-lg-6">
+                              <label for="inputRoom">Room</label>
+                              <div class="form-group">
+                                <input type="text" data-role="tagsinput" class="form-control" id="inputRoom" placeholder="Enter room" />
+                              </div>
+                          </div>
+                          <div class="col-lg-6">
+                              <label for="inputCLass">Class</label>
+                              <div class="form-group">
+                                <input type="text" data-role="tagsinput" class="form-control" id="inputClass" placeholder="Enter class" />
+                              </div>
+
+                          </div>
+
+                    </div>
+              </div>
+              <div class="rơw">
+
+
+              </div>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-danger">Delete</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+// Run Datables plugin and create 3 variants of settings
+function AllTables(){
+	TestTable3();
+	LoadSelect2Script(MakeSelect2);
+}
+function MakeSelect2(){
+	$('select').select2();
+	$('.dataTables_filter').each(function(){
+		$(this).find('label input[type=text]').attr('placeholder', 'Search');
+	});
+}
+$(document).ready(function() {
+	// Load Datatables and run plugin on tables
+	LoadDataTablesScripts(AllTables);
+	// Add Drag-n-Drop feature
+	WinMove();
+});
+</script>
+<!-- End of datatable -->
+
+{% endblock %}

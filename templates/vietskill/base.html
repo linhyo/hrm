@@ -21,6 +21,23 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/plugins/morris.css' %}">
     {# Custom Fonts #}
     <link rel="stylesheet" type="text/css" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
+    {# Custom Style & plugins #}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-tagsinput.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/schedule.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'plugins/fullcalendar/fullcalendar.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'plugins/select2/select2.css'%}">
+
+
+{# jQuery #}
+<script src="{% static 'js/jquery.js' %}"></script>
+{# Bootstrap Core JavaScript #}
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+{# Custom js #}
+<script src="{% static 'js/bootstrap-tagsinput.min.js' %}"></script>
+<script src="{% static 'js/typeahead.bundle.js' %}"></script>
+<!-- Hack to pass static path to script -->
+<script>var STATIC = {% static '' %}</script>
+<script src="{% static 'js/custom.js' %}"></script>
 </head>
 
 <body>
@@ -110,16 +127,16 @@
                                 class="fa fa-fw fa-calendar"></i> Schedule <i class="fa fa-fw fa-caret-down"></i></a>
                         <ul id="demo2" class="collapse">
                             <li>
-                                <a href="#">Meeting</a>
+                                <a href="{% url 'meeting' %}">Meeting</a>
                             </li>
                             <li>
-                                <a href="#">Plan</a>
+                                <a href="{% url 'plan' %}">Plan</a>
                             </li>
                             <li>
-                                <a href="#">Event</a>
+                                <a href="{% url 'event' %}">Event</a>
                             </li>
                             <li>
-                                <a href="#">Teaching Schedule</a>
+                                <a href="{% url 'teaching_schedule' %}">Teaching Schedule</a>
                             </li>
                             <li>
                                 <a href="#">Staff Shift</a>
@@ -150,10 +167,7 @@
 </div>
 {# /#wrapper #}
 
-{# jQuery #}
-<script src="{% static 'js/jquery.js' %}"></script>
-{# Bootstrap Core JavaScript #}
-<script src="{% static 'js/bootstrap.min.js' %}"></script>
+
 {# Morris Charts JavaScript #}
 <script src="{% static 'js/plugins/morris/raphael.min.js' %}"></script>
 <script src="{% static 'js/plugins/morris/morris.min.js' %}"></script>
@@ -164,5 +178,7 @@
 <script src="{% static 'js/plugins/flot/jquery.flot.resize.js' %}"></script>
 <script src="{% static 'js/plugins/flot/jquery.flot.pie.js' %}"></script>
 <script src="{% static 'js/plugins/flot/flot-data.js' %}"></script>
+
+
 </body>
 </html>

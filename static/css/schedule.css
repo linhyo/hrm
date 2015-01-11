@@ -1,0 +1,501 @@
+/*!
+ * Custom CSS for schedule page
+ * Code licensed under the Apache License v2.0.
+ */
+
+.scroll-area {
+    height: 250px;
+    position: relative;
+    overflow: auto;
+    background: #f3f3f3;
+}
+.inset {
+   -moz-box-shadow: inset 0 3px 8px rgba(0,0,0,.4);
+   -webkit-box-shadow: inset 0 3px 8px rgba(0,0,0,.4);
+   box-shadow: inset 0 3px 8px rgba(0,0,0,.24);
+   padding-top: 20px;
+   border-bottom: 1px solid #c0c0c0;
+}
+
+.meeting-list {
+    margin: 0px -10px;
+}
+
+/* Event block */
+.event-block {
+    display: block;
+    background-color: #fff;
+    height: 90px;
+    border: 1px solid #bfbfbf;
+    cursor: pointer;
+}
+
+.event-time {
+    display: block;
+    width: 80px;
+    height: 100%;
+    background-color: #399ee1;
+    color: #ffffff;
+    text-align: center;
+    line-height: 2em;
+}
+
+.event-day, .plan-duration {
+    font-size: 250%;
+}
+.event-hour, .plan-unit {
+    font-size: 90%;
+}
+.event-detail {
+    line-height: 1.5em;
+    padding: 10px;
+}
+.event-room {
+    font-size: 140%;
+    display: block;
+    margin-bottom: 7px;
+}
+
+/*Event form*/
+.event-form label {
+    color: #858585;
+    text-transform: uppercase;
+    font-size: 90%;
+}
+
+span.uppercase {
+    text-transform: uppercase;
+}
+
+span.lowercase {
+    text-transform: lowercase;
+}
+
+span.capitalize {
+    text-transform: capitalize;
+}
+
+h4.schedule {
+    color: #858585 !important;
+    font-size: 90%;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+/*Suggest tag style*/
+.tt-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: none;
+  float: left;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  list-style: none;
+  font-size: 14px;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  background-clip: padding-box;
+}
+.tt-suggestion > p {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: normal;
+  line-height: 1.428571429;
+  color: #333333;
+  white-space: nowrap;
+}
+.tt-suggestion > p:hover,
+.tt-suggestion > p:focus,
+.tt-suggestion.tt-cursor p {
+  color: #ffffff;
+  text-decoration: none;
+  outline: 0;
+  background-color: #428bca;
+}
+
+/* Plan Page */
+.plan-block {
+    display: block;
+    background-color: #fff;
+    height: 90px;
+    border: 1px solid #bfbfbf;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.plan-bread {
+    display: block;
+    width: 70px;
+    height: 100%;
+    background-color: #5444cb;
+    color: #ffffff;
+    text-align: center;
+    line-height: 2em;
+}
+
+.plan-status {
+    font-size: 90%;
+    border: 1px solid #ffffff;
+    padding: 0 5px;
+}
+.plan-detail {
+    line-height: 1.5em;
+    padding: 10px;
+    width: 75%;
+}
+.plan-content {
+    font-size: 140%;
+    display: block;
+    margin-bottom: 7px;
+}
+.button-edit {
+    font-size: 130%;
+    margin: 10px 10px 0 0;
+}
+
+.plan-sorts {
+    margin-bottom: 25px;
+}
+
+.status-radio {
+    text-transform: lowercase !important;
+}
+
+/* OpenModalStyle */
+.devoops-modal-inner {
+  margin-top:15px;
+  margin-bottom:15px;
+}
+
+#modalbox {
+  display:none;
+  position: fixed;
+  overflow: auto;
+  overflow-x: hidden;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 5000;
+  background:rgba(0,0,0,0.8);
+}
+#modalbox .devoops-modal {
+  position:absolute;top:90px;left:0;right:0;margin:auto;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px #505559;
+  background: transparent;
+  margin-bottom: 20px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  width: 600px;
+  z-index:6000;
+}
+#modalbox .devoops-modal-header {
+  color: #505559;
+  position:relative;
+  overflow: hidden;
+  height: 24px;
+  border-bottom: 1px solid #ccc;
+  background-color: #eaeaea;
+  background-image: -webkit-linear-gradient(top, #eaeaea, #e0e0e0);
+  background-image:    -moz-linear-gradient(top, #eaeaea, #e0e0e0);
+  background-image:     -ms-linear-gradient(top, #eaeaea, #e0e0e0);
+  background-image:      -o-linear-gradient(top, #eaeaea, #e0e0e0);
+  background-image:         linear-gradient(to bottom, #eaeaea, #e0e0e0);
+}
+#modalbox .devoops-modal-inner {
+  position: relative;
+  overflow: hidden;
+  padding: 15px;
+  background: #FBFBF0;
+}
+#modalbox .devoops-modal-bottom {
+  position: relative;
+  overflow: hidden;
+  padding: 15px;
+  background: #d8d8d8;
+}
+.external-event {
+  padding: 2px 6px;
+  margin: 8px 0;
+  background: #f5f5f5;
+  border-radius: 2px;
+}
+.external-event:hover {
+  cursor: move;
+  background: #6AA6D6;
+  color:#f8f8f8;
+}
+#add-new-event {
+  background: #ebebeb;
+  padding: 10px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.new-event-header {
+  border-bottom: 1px dashed #B6B6B6;
+  padding-bottom: 10px;
+}
+.tag1 {
+  background: #9e26d6;
+  color: #ffffff;
+}
+[class^="tag"] {
+    color: #ffffff;
+}
+.tag2 {
+  background: #3f78b5;
+}
+.tag3 {
+  background: #00b59f;
+}
+.tag4 {
+  background: #6b9eb5;
+}
+
+.tag-loc {
+  font-size: 80%;
+  text-transform: uppercase;
+  font-weight: bold;
+  padding: 0 5px;
+  background-color: rgba(255, 255, 255, 0.40);
+  border-radius: 5px;
+  float: right;
+  display: block;
+}
+
+/*Teaching schedule page style*/
+.box {
+  display: block;
+  position: relative;
+  border: 1px solid #ccc;
+  background: transparent;
+  margin-bottom: 20px;
+}
+.full-content .box {
+  border: 0;
+  margin-bottom: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+.box-header {
+  color: #505559;
+  position:relative;
+  overflow: hidden;
+  height: 24px;
+  border-bottom: 1px solid #ccc;
+  background-color: #eaeaea;
+  background-image: -webkit-linear-gradient(top, #eaeaea, #e0e0e0);
+  background-image:    -moz-linear-gradient(top, #eaeaea, #e0e0e0);
+  background-image:     -ms-linear-gradient(top, #eaeaea, #e0e0e0);
+  background-image:      -o-linear-gradient(top, #eaeaea, #e0e0e0);
+  background-image:         linear-gradient(to bottom, #eaeaea, #e0e0e0);
+}
+.box-name, .modal-header-name {
+  padding-left: 15px;
+  line-height: 24px;
+}
+.box-name:hover {
+  cursor: move;
+}
+.box-name > i {
+  margin-right:5px;
+}
+.box-icons {
+  position: absolute;
+  top:0;
+  right:0;
+  z-index: 9;
+}
+.no-move {
+  display: none;
+}
+.expanded .no-move {
+  position: absolute;
+  top:0;
+  left: 0;
+  width:100%;
+  height: 100%;
+  z-index: 1;
+  display: block;
+}
+.box-content {
+  position: relative;
+  padding: 15px;
+  background: #FBFBF0;
+}
+.box-content.dropbox, .box-content.sortablebox {
+  overflow: hidden;
+}
+.full-content .box-content {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+}
+.box-icons a {
+  cursor: pointer;
+  text-decoration: none !important;
+  border-left: 1px solid #FBFBF0;
+  height: 24px;
+  line-height: 24px;
+  font-size: 12px;
+  width: 28px;
+  display: block;
+  float: left;
+  text-align: center;
+  color: #505559;
+  -webkit-transition: 0.2s;
+  -moz-transition: 0.2s;
+  -o-transition: 0.2s;
+  transition: 0.2s;
+}
+.box-icons a:hover {background:#FBFBF0;color:#505559;}
+.box-icons a.beauty-table-to-json {
+  width: auto;
+  padding: 0 10px;
+  font-size: 14px;
+}
+.expanded a.close-link {
+  display:none;
+}
+
+.DTTT.btn-group a {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  line-height: 1em;
+  font-size: 14px;
+  font-weight: bold;
+  outline: none;
+  box-shadow: none !important;
+  padding: 6px 12px;
+  margin: 0;
+  background: #F7F7F7;
+  border: 0;
+}
+
+/*Data table Style*/
+#datatable-3_filter input[type=search] {
+	display:block;
+	width:180%;
+	height:34px;
+	padding:6px 12px;
+	font-size:14px;
+	line-height:1.42857143;
+	color:#555;
+	background-color:#fff;
+	background-image:none;
+	border:1px solid #ccc;
+	border-radius:4px;
+	-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075);
+	box-shadow:inset 0 1px 1px rgba(0,0,0,.075);
+	-webkit-transition:border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+	-o-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+	transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    margin-left: -30px;
+}
+
+#datatable-3_filter input[type=search]:focus{
+	border-color:#66afe9;
+	outline:0;
+	-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+	box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)
+}
+
+.table-datatable *, .table-datatable :after, .table-datatable :before {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+  -moz-box-sizing: content-box;
+}
+.table-datatable label {
+  position: relative;
+  display: block;
+  font-weight: 400;
+}
+.table-datatable tbody td {
+  vertical-align: middle !important;
+}
+.table-datatable img {
+  margin-right: 10px;
+  border: 1px solid #F8F8F8;
+  width: 40px;
+}
+.table-datatable .sorting {
+  background:url(../images/sort.png) right center no-repeat;
+  padding-right:16px;
+  cursor:pointer;
+}
+.table-datatable .sorting_asc {
+  background:url(../images/sort-asc.png) right center no-repeat;
+  padding-right: 16px;
+  cursor:pointer;
+}
+.table-datatable .sorting_desc {
+  background:url(../images/sort-desc.png) right center no-repeat;
+  padding-right: 16px;
+  cursor:pointer;
+}
+
+.teacher-name {
+  color: #686868;
+}
+.class-duration {
+  background-color: rgba(255, 255, 255, 0.40);
+  display: block;
+  width: 67px;
+  font-weight: bold;
+  font-size: 65%;
+  margin-bottom: 5px;
+}
+span[class^="session"] {
+  display: block;
+  background-color: #892dff;
+  border-radius: 2px;
+  margin-bottom: 5px;
+  padding: 5px;
+  color: #ffffff;
+  font-size: 110%;
+  cursor: pointer;
+}
+span.session0 {
+  opacity: 0;
+  cursor: default;
+}
+span.session1 {
+  background-color: #2b5797;
+}
+span.session2 {
+  background-color: #9f00a7;
+}
+span.session3 {
+  background-color: #b91d47;
+}
+span.session4 {
+  background-color: #7e3878;
+}
+.schedule-button {
+	color:#fff;
+	background-color:#5cb85c !important;
+	border-color:#4cae4c !important;
+    border-radius: 3px !important;
+}
+.schedule-button:hover {
+    color: #ffffff !important;
+    background-color: #46a348 !important;
+
+}
