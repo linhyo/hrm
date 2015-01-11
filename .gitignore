@@ -56,3 +56,5 @@ ChangeLog
 # Temp db
 *.db
 *.sqlite3
+.venv
+meeting_shell
