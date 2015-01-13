@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     url(r'^profile-detail/(?P<pk>[0-9]+)/$', views.profile_detail, name='profile_detail'),
     url(r'^profile/add/$', views.profile_add, name='profile_add'),
     url(r'^profile/(?P<pk>[0-9]+)/edit/$', views.profile_edit, name='profile_edit'),
+    url(r'^profile/(?P<pk>[0-9]+)/delete/$', views.profile_delete, name='profile_delete'),
     # Include urls for schedule
     url(r'^schedule/', include(schedule.urls))
 )
