@@ -155,6 +155,10 @@ h4.schedule {
     line-height: 1.5em;
     padding: 10px;
     width: 75%;
+    text-overflow:ellipsis;
+    height: 100%;
+    white-space: nowrap;
+    overflow: hidden;
 }
 .plan-content {
     font-size: 140%;
@@ -467,7 +471,7 @@ h4.schedule {
   font-size: 65%;
   margin-bottom: 5px;
 }
-span[class^="session"] {
+span[class^="session"], .blank_block {
   display: block;
   background-color: #892dff;
   border-radius: 2px;
@@ -477,7 +481,7 @@ span[class^="session"] {
   font-size: 110%;
   cursor: pointer;
 }
-span.session0 {
+span.blank_block {
   opacity: 0;
   cursor: default;
 }
@@ -488,10 +492,10 @@ span.session2, .color2 {
   background-color: #9f00a7;
 }
 span.session3, .color3 {
-  background-color: #b91d47;
+  background-color: #5444CB;
 }
-span.session4, color4 {
-  background-color: #7e3878;
+span.session4, .color4 {
+  background-color: #b91d47;
 }
 span.session5, .color5 {
   background-color: #603cba;

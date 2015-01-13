@@ -1,6 +1,7 @@
 {% extends "vietskill/base.html" %}
 
 {% load staticfiles %}
+{% load extra_tags %}
 
 {% block title %} Teaching Schedule {% endblock %}
 {% block content %}
@@ -59,63 +60,31 @@
 						</tr>
 					</thead>
 					<tbody>
+                    {% if teacher_schedule %}
+                        {% for row in teacher_schedule %}
 						<tr>
-							<td><b class="teacher-name">Hails</b><img class="pull-left" src="http://localhost:8080/media/profile_images/s3.png"></td>
+                            {%  for teacher in row|slice:"1" %}
+							<td><b class="teacher-name">{{ teacher.name }}</b><img class="pull-left" src="{{ teacher.picture.url }}"></td>
+                            {% endfor %}
                             <!-- Day sessions -->
-							<td><div data-toggle="modal" data-target="#myModal">
-                                <span class="session1"><span class="class-duration">7:15 - 9:00</span> Life Skill</span>
-                                <span class="session2"><span class="class-duration">9:30 - 11:15</span> Art</span>
-                                <span class="session3"><span class="class-duration">12:30 - 14:15</span> Soft Skill</span>
-                                <span class="session4"><span class="class-duration">14:45 - 16:30</span> Copy Editing</span>
+                            {% for col in row|slice:"1:" %}
+							<td><div >
+                                {% for item in col %}
+                                <span class="{{ item.id|schedule_class }}"
+                                      data-json='{"id": {{item.id}}, "session": "{{ item.session }}",
+                                                 "subject": "{{ item.subject }}", "day": "{{ item.day }}",
+                                                 "room": "{{ item.room }}", "staff": "{{ item.staff_id }}",
+                                                 "class": "{{ item.classes }}" }'>
+                                    <span class="class-duration">{{ item.get_session }}</span>
+                                    {{ item.get_subject }}
+                                </span>
+                                {% endfor %}
                                 </div>
                             </td>
-							<td>
-                                <span class="session0"><span class="class-duration">0:00 - 0:00</span> None</span>
-                                <span class="session2"><span class="class-duration">9:30 - 11:15</span> Art</span>
-                                <span class="session3"><span class="class-duration">12:30 - 14:15</span> Soft Skill</span>
-                                <span class="session4"><span class="class-duration">14:45 - 16:30</span> Copy Editing</span>
-							</td>
-							<td>
-                                <span class="session0"><span class="class-duration">0:00 - 0:00</span> None</span>
-                                <span class="session0"><span class="class-duration">9:30 - 11:15</span> Art</span>
-                                <span class="session0"><span class="class-duration">12:30 - 14:15</span> Soft Skill</span>
-                                <span class="session0"><span class="class-duration">14:45 - 16:30</span> Copy Editing</span>
-							</td>
-							<td>
-                                <span class="session0"><span class="class-duration">0:00 - 0:00</span> None</span>
-                                <span class="session0"><span class="class-duration">9:30 - 11:15</span> Art</span>
-                                <span class="session0"><span class="class-duration">12:30 - 14:15</span> Soft Skill</span>
-                                <span class="session0"><span class="class-duration">14:45 - 16:30</span> Copy Editing</span>
-							</td>
-							<td>
-                                <span class="session0"><span class="class-duration">0:00 - 0:00</span> None</span>
-                                <span class="session0"><span class="class-duration">9:30 - 11:15</span> Art</span>
-                                <span class="session0"><span class="class-duration">12:30 - 14:15</span> Soft Skill</span>
-                                <span class="session0"><span class="class-duration">14:45 - 16:30</span> Copy Editing</span>
-							</td>
-							<td>
-                                <span class="session0"><span class="class-duration">0:00 - 0:00</span> None</span>
-                                <span class="session0"><span class="class-duration">9:30 - 11:15</span> Art</span>
-                                <span class="session0"><span class="class-duration">12:30 - 14:15</span> Soft Skill</span>
-                                <span class="session0"><span class="class-duration">14:45 - 16:30</span> Copy Editing</span>
-							</td>
-							<td>
-                                <span class="session0"><span class="class-duration">0:00 - 0:00</span> None</span>
-                                <span class="session0"><span class="class-duration">9:30 - 11:15</span> Art</span>
-                                <span class="session0"><span class="class-duration">12:30 - 14:15</span> Soft Skill</span>
-                                <span class="session0"><span class="class-duration">14:45 - 16:30</span> Copy Editing</span>
-							</td>
+                            {% endfor %}
 						</tr>
-						<tr>
-							<td>2</td>
-							<td>Debian</td>
-							<td>14.1%</td>
-							<td><i class="fa fa-home"></i><a href="http://debian.org" target="_blank">http://debian.org</a></td>
-							<td>7.4</td>
-							<td><i class="fa fa-linux"></i></td>
-							<td><i class="fa fa-linux"></i></td>
-							<td><i class="fa fa-linux"></i></td>
-						</tr>
+                       {% endfor %}
+                    {% endif %}
 					</tbody>
 				</table>
 			</div>
@@ -127,7 +96,8 @@
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form class="event-form">
+      <form class="event-form" action="{% url 'update_schedule' %}" method="POST">
+      {% csrf_token %}
 
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -144,14 +114,10 @@
                           <div class="col-lg-6">
                           <label for="inputSubject">Subject</label>
                           <br>
-                            <select style="width: 90%">
-                              <option>Master of Ceremonies</option>
-                              <option>Life Skill</option>
-                              <option>Art</option>
-                              <option>Soft Skill</option>
-                              <option>Copy Editing</option>
-                              <option>Communication</option>
-                              <option>Culture</option>
+                            <select name="subject" style="width: 90%">
+                                {% for sub in subject_choices %}
+                                <option value="{{ sub.id }}">{{ sub.value }}</option>
+                                {% endfor %}
                             </select>
                           </div>
                           <!-- End block -->
@@ -160,14 +126,10 @@
                       <div class="col-lg-6">
                           <label for="inputDay">Day</label>
                           <br>
-                            <select style="width: 90%">
-                              <option>Monday </option>
-                              <option>Tuesday</option>
-                              <option>Wednesday</option>
-                              <option>Thursday</option>
-                              <option>Friday</option>
-                              <option>Saturday</option>
-                              <option>Sunday</option>
+                            <select name="day" style="width: 90%">
+                              {% for day in day_choices %}
+                                  <option value="{{  day.id }}">{{  day.value }}</option>
+                                {% endfor %}
                             </select>
                       </div>
 
@@ -182,10 +144,10 @@
                           <div class="col-lg-6">
                           <label for="inputTeacher">Teacher</label>
                           <br>
-                            <select style="width: 90%">
-                              <option>Hails</option>
-                              <option>Vo doi</option>
-                              <option>Dep trai</option>
+                            <select name="staff" style="width: 90%">
+                            {% for teacher in teacher_list %}
+                              <option value="{{  teacher.id }}">{{  teacher.name }}</option>
+                            {% endfor %}
                             </select>
 
                           </div>
@@ -194,11 +156,10 @@
                       <div class="col-lg-6">
                           <label for="inputSession">Session</label>
                           <br>
-                            <select style="width: 90%">
-                              <option>7:15 - 9:00 </option>
-                              <option>9:30 - 11:15</option>
-                              <option>12:30 - 14:15</option>
-                              <option>14:45 - 16:30</option>
+                            <select name="session" style="width: 90%">
+                              {% for session in session_choices %}
+                                  <option value="{{  session.id }}">{{  session.value }}</option>
+                                {% endfor %}
                             </select>
                       </div>
                       <!-- End of block -->
@@ -210,15 +171,15 @@
                           <div class="col-lg-6">
                               <label for="inputRoom">Room</label>
                               <div class="form-group">
-                                <input type="text" data-role="tagsinput" class="form-control" id="inputRoom" placeholder="Enter room" />
+                                <input name="room" type="text" class="form-control" id="inputRoom" placeholder="Enter room" />
                               </div>
                           </div>
                           <div class="col-lg-6">
                               <label for="inputCLass">Class</label>
                               <div class="form-group">
-                                <input type="text" data-role="tagsinput" class="form-control" id="inputClass" placeholder="Enter class" />
+                                <input type="text" name="classes" class="form-control" id="inputClass" placeholder="Enter class" />
                               </div>
-
+                              <input type="hidden" name="id">
                           </div>
 
                     </div>
@@ -231,8 +192,8 @@
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Save changes</button>
-        <button type="button" class="btn btn-danger">Delete</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+        <a href="{% url 'delete_schedule' pk=0 %}" type="button" class="btn btn-danger delete_item">Delete</a>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
       </form>
@@ -257,7 +218,7 @@ $(document).ready(function() {
 	// Load Datatables and run plugin on tables
 	LoadDataTablesScripts(AllTables);
 	// Add Drag-n-Drop feature
-	WinMove();
+    LoadScheduleModal();
 });
 </script>
 <!-- End of datatable -->

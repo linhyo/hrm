@@ -38,8 +38,14 @@
 {# Custom js #}
 <script src="{% static 'js/bootstrap-tagsinput.min.js' %}"></script>
 <script src="{% static 'js/typeahead.bundle.js' %}"></script>
+<script src="{% static 'js/WearProtection.js' %}"></script>
+
 <!-- Hack to pass static path to script -->
-<script>var STATIC = {% static '' %}</script>
+<script>
+    var STATIC = {% static '' %};
+    var EVENTS_JSON = "{% url 'fetch_events' %}";
+    var EVENT_UPDATE = "{% url 'update_event' %}";
+</script>
 <script src="{% static 'js/custom.js' %}"></script>
 </head>
 
@@ -158,9 +164,21 @@
     </nav>
     {# /.navbar-collapse #}
 
-    <div id="page-wrapper" style="min-height: 600px;">
-        <div class="container-fluid">
-            <div>
+                    <div id="page-wrapper" style="min-height: 600px;">
+                        <div class="container-fluid">
+                            <div>
+
+                    {# Error Messages #}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-danger" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>
+                                <strong>Warning!</strong> {{ message }}</div>
+                        {% endfor %}
+
+                {% endif %}
+
                 {% block content %}{% endblock %}
             </div>
         </div>

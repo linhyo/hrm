@@ -1,6 +1,7 @@
 {% extends "vietskill/base.html" %}
 
 {% load staticfiles %}
+{% load extra_tags %}
 
 {% block title %} Plan {% endblock %}
 
@@ -26,7 +27,7 @@
         <div class="row">
             <div class="col-lg-12">
             <h4 class="schedule pull-left">Recent Activities</h4>
-            <a class="btn btn-success pull-right" href="">Create new plan</a>
+            <a class="btn btn-success pull-right new-plan" href="#">Create new plan</a>
             </div>
         </div>
 
@@ -44,64 +45,53 @@
         </div>
 
         <div class="row">
-
+                {% if plans %}
                 <div class="col-lg-12">
+
+                    {% for row in plans %}
                     <div class="row">
                         <!-- An event block -->
+                        {% for col in row  %}
                         <div class="col-xs-4">
-                            <div class="plan-block" data-toggle="modal" data-target="#myModal">
-                                <div class="plan-bread pull-left">
-                                    <span class="plan-status"><b>active</b></span> <br/>
-                                    <span class="plan-duration"><b>4</b></span><br />
+                            <div class="plan-block"
+
+                                 data-json='{"id": {{col.id}}, "start_date": "{{ col.start_date|date:'d/m/Y' }}",
+                                  "due_date": "{{ col.due_date|date:'d/m/Y' }}", "content": "{{ col.content }}",
+                                   "status": "{{ col.status }}", "staffs_ref": "{{ col.staffs_ref }}" }'>
+
+                                <div class="plan-bread color{{ col.id|mod:5 }} pull-left">
+                                    <span class="plan-status"><b>{{ col.status|plan_status }}</b></span> <br/>
+                                    <span class="plan-duration"><b>{{ col.duration }}</b></span><br />
                                     <span class="plan-unit">days</span>
                                 </div>
-                                <p class="plan-detail pull-left"><b class="plan-content">Feb 2nd - 10th</b>
-                                Nullam hendrerit justo non leo aliquet ... <br />
-                                <a href="hails@vccloud.vn">hails</a>, <a href="hails@vccloud.vn">vodoi</a>, <a href="hails@vccloud.vn">deptrai</a>
+                                <p class="plan-detail pull-left"><b class="plan-content">
+                                    {{ col.start_date|date:"M jS"}} - {{ col.due_date|date:"jS" }}</b>
+                                {{ col.content }}<br />
+                                {%  for p in col.staffs.all %}
+                                    <a href="{{ p.email }}">{{ p.name }}</a>
+                                {% endfor %}
                                 </p>
                                 <button type="button" class="close button-edit" data-dismiss="alert" aria-label="Close"><span class="glyphicon glyphicon-pencil"></span></button>
 
                             </div>
                         </div>
                         <!-- Event ends -->
+                        {% endfor %}
 
-                        <!-- An event block -->
-                        <div class="col-xs-4">
-                            <div class="event-block">
-                                <div class="event-time pull-left">
-                                    <span class="uppercase"><b>Thu, Oct</b></span> <br/>
-                                    <span class="event-day"><b>9</b></span><br />
-                                    <span class="event-hour">2pm - 5pm</span>
-                                </div>
-                                <p class="event-detail pull-left"><b class="event-room">414 Room</b>
-                                Nullam hendrerit justo non leo aliquet imper diet.<br />
-                                <a href="hails@vccloud.vn">hails</a>, <a href="hails@vccloud.vn">vodoi</a>, <a href="hails@vccloud.vn">deptrai</a>
-                                </p>
-                            </div>
-                        </div>
-                        <!-- Event ends -->
+                    </div>
+        {% endfor %}
 
-                        <!-- An event block -->
-                        <div class="col-xs-4">
-                            <div class="event-block">
-                                <div class="event-time pull-left">
-                                    <span class="uppercase"><b>Thu, Oct</b></span> <br/>
-                                    <span class="event-day"><b>22</b></span><br />
-                                    <span class="event-hour">2pm - 5pm</span>
-                                </div>
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <p class="event-detail pull-left"><b class="event-room">414 Room</b>
-                                Nullam hendrerit justo non leo aliquet imper diet.<br />
-                                <a href="hails@vccloud.vn">hails</a>, <a href="hails@vccloud.vn">vodoi</a>, <a href="hails@vccloud.vn">deptrai</a>
-                                </p>
-                            </div>
-                        </div>
+    </div>
+    {% endif %}
 
-                        <!-- Modal -->
+</div>
+
+<!-- Hidden Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form class="event-form">
+      <form class="event-form" method="POST" action="{% url 'update_plan' pk=0 %}">
+      {% csrf_token %}
 
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -118,7 +108,7 @@
                           <div class="col-lg-6">
                               <div class="form-group">
                                 <label for="inputTime">Content</label>
-                                <textarea class="form-control" id="inputPurpose" placeholder="Enter meeting notes" rows="3"></textarea>
+                                <textarea class="form-control" name="content" id="inputContent" placeholder="Enter Plan" rows="3"></textarea>
                               </div>
 
                           </div>
@@ -129,10 +119,10 @@
                           <label for="inputTime">Time</label>
                           <div class="form-inline">
                               <div class="form-group">
-                                <input type="datetime" class="form-control" id="inputStartDate" placeholder="Start date">
+                                <input type="text" class="input_date form-control" name="start_date" id="inputStartDate" placeholder="Start date">
                               </div>
                               <div class="form-group">
-                                <input type="datetime" class="form-control" id="inputDueDate" placeholder="Due date">
+                                <input type="text" class="input_date form-control" name="due_date" id="inputDueDate" placeholder="Due date">
                               </div>
                           </div>
                       </div>
@@ -141,14 +131,13 @@
                     </div>
                 </div>
 
-
               <div class="rơw">
                     <div class="row">
 
                           <div class="col-lg-6">
                               <label for="inputTime">Staffs</label>
                               <div class="form-group">
-                                <input type="text" data-role="tagsinput" class="form-control" id="inputStaffs" placeholder="Enter staffs" />
+                                <input type="text" data-role="tagsinput" name="staffs" class="form-control" id="inputStaffs" placeholder="Enter staffs" />
                               </div>
                           </div>
 
@@ -158,13 +147,13 @@
                             <label for="inputStatus">Status</label>
                             <br>
                             <label class="radio-inline status-radio">
-                              <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="New" checked> New
+                              <input type="radio" name="status" id="inlineRadio2" value="2"> In Progress
                             </label>
                             <label class="radio-inline status-radio">
-                              <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="In Progress"> In Progress
+                              <input type="radio" name="status" id="inlineRadio3" value="1"> Completed
                             </label>
                             <label class="radio-inline status-radio">
-                              <input type="radio" name="inlineRadioOptions"  id="inlineRadio3" value="Completed"> Completed
+                              <input type="radio" name="status" id="inlineRadio1" value="3" checked> New
                             </label>
 
                         </div>
@@ -179,8 +168,8 @@
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Save changes</button>
-        <button type="button" class="btn btn-danger">Delete</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+        <a type="button" href="{% url 'delete_plan' pk=0 %}" class="btn btn-danger delete_item">Delete</a>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
       </form>
@@ -188,64 +177,62 @@
   </div>
 </div>
 
-                        <!-- Event ends -->
-
-                    </div>
-
-    </div>
-
-</div>
-
+<script src="{% static 'plugins/jquery-ui/jquery-ui.min.js' %}"></script>
 <script>
-var data = [ { "value": 1 , "text": "Amsterdam" , "continent": "Europe" },
-{ "value": 2 , "text": "London" , "continent": "Europe" },
-{ "value": 3 , "text": "Paris" , "continent": "Europe" },
-{ "value": 4 , "text": "Washington" , "continent": "America" },
-{ "value": 5 , "text": "Mexico City" , "continent": "America" },
-{ "value": 6 , "text": "Buenos Aires", "continent": "America" },
-{ "value": 7 , "text": "Sydney" , "continent": "Australia" },
-{ "value": 8 , "text": "Wellington" , "continent": "Australia" },
-{ "value": 9 , "text": "Canberra" , "continent": "Australia" },
-{ "value": 10, "text": "Beijing" , "continent": "Asia" },
-{ "value": 11, "text": "New Delhi" , "continent": "Asia" },
-{ "value": 12, "text": "Kathmandu" , "continent": "Asia" },
-{ "value": 13, "text": "Cairo" , "continent": "Africa" },
-{ "value": 14, "text": "Cape Town" , "continent": "Africa" },
-{ "value": 15, "text": "Kinshasa" , "continent": "Africa" }
-];
-var cities = new Bloodhound({
+// Load Staff data
+var data = [];
+var staff_objects = {};
+{% for staff in staffs  %}
+    var staff_dict = {"value": {{  staff.id }}, "text": "{{  staff.name }}", "email": "{{  staff.email }}" }
+    data.push(staff_dict);
+    staff_objects[String({{  staff.id }})] = staff_dict;
+
+{% endfor %}
+var staff_data = new Bloodhound({
   datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
   queryTokenizer: Bloodhound.tokenizers.whitespace,
   local: data
 });
-cities.initialize();
-
+staff_data.initialize();
 
 var elt = $('input#inputStaffs');
 elt.tagsinput({
   tagClass: function(item) {
-    switch (item.continent) {
-      case 'Europe'   : return 'label label-primary';
-      case 'America'  : return 'label label-danger label-important';
-      case 'Australia': return 'label label-success';
-      case 'Africa'   : return 'label label-default';
-      case 'Asia'     : return 'label label-warning';
+    switch (item.value % 5 + 1) {
+      case 1    : return 'label label-primary';
+      case 2    : return 'label label-danger label-important';
+      case 3    : return 'label label-success';
+      case 4    : return 'label label-default';
+      case 5    : return 'label label-warning';
     }
   },
   itemValue: 'value',
   itemText: 'text',
   typeaheadjs: {
-    name: 'cities',
+    name: 'staff_data',
     displayKey: 'text',
-    source: cities.ttAdapter()
+    source: staff_data.ttAdapter()
   }
 });
-// Load all staffs
-elt.tagsinput('add', { "value": 1 , "text": "Amsterdam"   , "continent": "Europe"    });
-elt.tagsinput('add', { "value": 4 , "text": "Washington"  , "continent": "America"   });
-elt.tagsinput('add', { "value": 7 , "text": "Sydney"      , "continent": "Australia" });
-elt.tagsinput('add', { "value": 10, "text": "Beijing"     , "continent": "Asia"      });
-elt.tagsinput('add', { "value": 13, "text": "Cairo"       , "continent": "Africa"    });
+// Load some staffs
+elt.tagsinput('add', data[0]);
+elt.tagsinput('add', data[1]);
+elt.tagsinput('add', data[2]);
+elt.tagsinput('add', data[3]);
+
+// Run timepicker
+function DemoTimePicker(){
+	$('.input_time').timepicker({setDate: new Date()});
+}
+
+$(document).ready(function() {
+    // Initialize datepicker
+    $('.input_date').datepicker({setDate: new Date()});
+    // Load Timepicker plugin
+    LoadTimePickerScript(DemoTimePicker);
+    OpenPlanModal();
+    OpenNewPlan("{% url 'new_plan' %}");
+})
 
 </script>
 

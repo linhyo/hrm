@@ -39,7 +39,7 @@ function LoadCalendarScript(callback){
         }
 }
 
-/*-------------------------------------------
+/*-------------------------------------------class Event
 	Function for Calendar page (calendar.html)
 ---------------------------------------------*/
 //
@@ -65,6 +65,21 @@ function DrawCalendar(){
 	/* initialize the calendar
 	-----------------------------------------------------------------*/
 	var calendar = $('#calendar').fullCalendar({
+            eventSources: [
+
+            // your event source
+            {
+                url: EVENTS_JSON,
+                type: 'POST',
+                data: {
+                    custom_param1: 'something',
+                    custom_param2: 'somethingelse'
+                },
+                error: function() {
+                    alert('there was an error while fetching events!');
+                }
+            }
+        ],
 		header: {
 			left: 'prev,next today',
 			center: 'title',
@@ -78,18 +93,21 @@ function DrawCalendar(){
 				'<div class="col-lg-12">'+
                     '<div class="form-group">'+
                     '<label>Event title</label>'+
-                    '<input type="text" id="newevent_name" class="form-control" placeholder="Name of event">'+
+                    '<input type="text" id="newevent_name" name="title" class="form-control" placeholder="Name of event">'+
                     '</div>'+
 
                     '<div class="form-group">'+
                     '<label>Location</label>'+
-                    '<input type="text" id="newevent_location" class="form-control" placeholder="Location">'+
+                    '<input type="text" id="newevent_location" name="location" class="form-control" placeholder="Location">'+
                     '</div>'+
 
                     '<div class="form-group">'+
                     '<label>Description</label>'+
-                    '<textarea rows="3" id="newevent_desc" class="form-control" placeholder="Description"></textarea>'+
+                    '<textarea rows="3" id="newevent_content" name="content" class="form-control" placeholder="Description"></textarea>'+
                     '</div>'+
+
+                    '<input type="hidden" name="date" value="'+ start +'">'+
+                    '<input type="hidden" name="id" value="undefined">'+
 
 				'</div></div>');
 
@@ -109,7 +127,7 @@ function DrawCalendar(){
 					calendar.fullCalendar('renderEvent',
 						{
 							title: new_event_name,
-							description: $('#newevent_desc').val(),
+							content: $('#newevent_content').val(),
 							start: start,
 							end: end,
 							allDay: allDay
@@ -141,36 +159,47 @@ function DrawCalendar(){
 			}
 		},
 		eventRender: function (event, element, icon) {
-			if (event.description != "") {
-				element.attr('title', event.description);
+			if (event.content != "") {
+				element.attr('title', event.content);
 			}
 		},
 		eventClick: function(calEvent, jsEvent, view) {
-			var form_2 = $('<div class="row">'+
+            console.log(calEvent);
+            console.log(view);
+            var form_content = '<div class="row">'+
 				'<div class="col-lg-12">'+
                     '<div class="form-group">'+
                     '<label>Event title</label>'+
-                    '<input type="text" id="newevent_name" value="'+ calEvent.title +'" class="form-control" placeholder="Name of event">'+
+                    '<input type="text" name="title" id="newevent_name" value="'+ calEvent.title +'" class="form-control" placeholder="Name of event">'+
                     '</div>'+
 
                     '<div class="form-group">'+
                     '<label>Location</label>'+
-                    '<input type="text" id="newevent_location" value="'+ calEvent.location +'"class="form-control" placeholder="Location">'+
+                    '<input type="text" name="location" id="newevent_location" value="'+ calEvent.location +'"class="form-control" placeholder="Location">'+
                     '</div>'+
 
                     '<div class="form-group">'+
                     '<label>Description</label>'+
-                    '<textarea rows="3" id="newevent_desc" class="form-control" placeholder="Description">'+ calEvent.description +'</textarea>'+
+                    '<textarea rows="3" name="content" id="newevent_content" class="form-control" placeholder="Description">'+ calEvent.content +'</textarea>'+
                     '</div>'+
 
-				'</div></div>');
+                    '<input type="hidden" name="date" value="'+ calEvent.start +'">';
 
+            if (calEvent.event_id != null) {
+                form_content += '<input type="hidden" name="id" value="'+ calEvent.event_id +'">';
+
+            }
+            form_content += '</div></div>';
+            console.log(form_content)
+			var form_2 = $(form_content);
+
+            console.log(calEvent.event_id);
 			var buttons = $('<button id="event_cancel" type="cancel" class="btn btn-default btn-label-left">'+
 							'Cancel'+
 							'</button>'+
-							'<button id="event_delete" type="cancel" class="btn btn-danger btn-label-left">'+
+							'<a id="event_delete" href="'+ calEvent.delete_url +'" type="cancel" class="btn btn-danger btn-label-left">'+
 							'Delete'+
-							'</button>'+
+							'</a>'+
 							'<button type="submit" id="event_change" class="btn btn-primary btn-label-left pull-right">'+
 							'Save changes'+
 							'</button>');
@@ -186,7 +215,7 @@ function DrawCalendar(){
 			});
 			$('#event_change').on('click', function(){
 				calEvent.title = $('#newevent_name').val();
-				calEvent.description = $('#newevent_desc').val();
+				calEvent.content = $('#newevent_content').val();
                 calEvent.location = $('newevent_location').val();
 				calendar.fullCalendar('updateEvent', calEvent);
 				CloseModalBox()
@@ -196,7 +225,7 @@ function DrawCalendar(){
 		$('#new-event-add').on('click', function(event){
 			event.preventDefault();
 			var event_name = $('#new-event-title').val();
-			var event_description = $('#new-event-desc').val();
+			var event_description = $('#new-event-content').val();
             var event_location = $('#new-event-location').val();
             var tag_name = 'tag' + random_int(1, 4);
 			if (event_name != ''){
@@ -205,8 +234,8 @@ function DrawCalendar(){
 			$('#events-templates-header').after(event_template);
 			var eventObject = {
 				title: event_name,
-				description: event_description,
-                location: event_location
+				content: event_description,
+                location: event_location,
 			};
 			// store the Event Object in the DOM element so we can get to it later
 			event_template.data('eventObject', eventObject);
@@ -237,13 +266,17 @@ function SetMinBlockHeight(elem){
 //  Helper for open ModalBox with requested header, content and bottom
 //
 //
-function OpenModalBox(header, inner, bottom){
+function OpenModalBox(header, inner, bottom, url){
+    // Default value for url is None
+    url = typeof url !== 'undefined' ? url : EVENT_UPDATE;
 	var modalbox = $('#modalbox');
-	//modalbox.find('.modal-header-name span').html(header);
-	//modalbox.find('.devoops-modal-inner').html(inner);
-	//modalbox.find('.devoops-modal-bottom').html(bottom);
     modalbox.find('.modal-body').html(inner);
     modalbox.find('.modal-footer').html(bottom);
+    if (url != null) {
+        var form = modalbox.find('form');
+        form.attr('action', url);
+        form.attr('method', 'POST');
+    }
     modalbox.modal('show');
 	modalbox.fadeIn('fast');
 	$('body').addClass("body-expanded");
@@ -279,7 +312,10 @@ function TestTable3(){
 			"aButtons": [
                 {
                     "fnClick": function ( nButton, oConfig, oFlash ) {
-                        $("#myModal").modal('show');
+                        var modal = $("#myModal")
+                        modal.find('button[type="submit"]').text("Add");
+                        modal.find('a.delete_item').hide();
+                        modal.modal('show');
                     },
                     "sButtonClass": "schedule-button",
                     "sExtends": "text",
@@ -402,7 +438,7 @@ function LoadTimePickerScript(callback){
 	}
 }
 
-// Open Modal
+// Open Schedule Modal
 function OpenMeetingModal() {
     $('.event-block').on('click', function(evt) {
         // Retrieve meeting data
@@ -435,5 +471,108 @@ function OpenMeetingModal() {
 
         // Display modal
         modal.modal('show');
+    });
+}
+
+// New Plan Modal
+function OpenNewPlan(action_url) {
+    $('.new-plan').on('click', function(evt) {
+        // Display modal;
+        var modal = $('#myModal');
+        var create_form = modal.find('form');
+        var delete_button = modal.find('a.delete_item');
+        var submit_button = modal.find('button[type="submit"]');
+        submit_button.text("Create")
+        var action = create_form.attr('action');
+        delete_button.hide()
+        create_form.attr('action', action_url);
+
+        modal.modal('show');
+    });
+}
+
+// Open Plan Modal
+function OpenPlanModal() {
+    $('.plan-block').on('click', function(evt) {
+        // Retrieve plan data
+        var plan_json =  $(evt.currentTarget).data('json');
+        // Update modal data
+        var modal = $('#myModal');
+        var content_input = modal.find('textarea#inputContent');
+        var start_input = modal.find('input#inputStartDate');
+        var due_input = modal.find('input#inputDueDate');
+        var status_input = modal.find('input[type="radio"]');
+        var delete_button = modal.find('a.delete_item');
+        var update_form = modal.find('form');
+
+        content_input.val(plan_json.content);
+        start_input.val(plan_json.start_date);
+        due_input.val(plan_json.due_date);
+        for (var i = 0; i < status_input.length; i++) {
+            var obj = $(status_input[i]);
+            if (obj.val() == plan_json.status) {
+                obj.prop('checked', true);
+            }
+            else{
+                obj.prop('checked', false);
+            }
+        }
+
+        var delete_link = delete_button.attr('href');
+        delete_button.attr('href', delete_link.replace(0, plan_json.id));
+        delete_button.show();
+        var action = update_form.attr('action');
+        update_form.attr('action', action.replace(0, plan_json.id));
+        var submit_button = modal.find('button[type="submit"]');
+        submit_button.text("Save Changes");
+
+        // Staffs
+        var staffs_input = modal.find('input#inputStaffs');
+        staffs_input.tagsinput('removeAll');
+        var staffs_data = plan_json.staffs_ref.split(",");
+        for (i = 0; i < staffs_data.length; i++) {
+            staffs_input.tagsinput('add', staff_objects[staffs_data[i]]);
+        }
+
+        // Display modal
+        modal.modal('show');
+    });
+}
+
+// Function to dynamically load modal data
+function LoadScheduleModal() {
+    $('span[class^="session"]').on("click", function(evt){
+        // Retrieve item data
+        var item_json =  $(evt.currentTarget).data('json');
+        // Find modal element
+        var modal = $('#myModal');
+        var subject_choice = modal.find('select[name="subject"]');
+        var day_choice = modal.find('select[name="day"]');
+        var session_choice = modal.find('select[name="session"]');
+        var teacher_choice = modal.find('select[name="staff"]');
+        var room_input = modal.find('input[name="room"]');
+        var class_input = modal.find('input[name="classes"]');
+        var id_input = modal.find('input[name="id"]');
+
+
+        // Set element value
+        subject_choice.select2("val", item_json.subject);
+        day_choice.select2("val", item_json.day);
+        session_choice.select2("val", item_json.session);
+        teacher_choice.select2("val", item_json.staff);
+        room_input.val(item_json.room);
+        class_input.val(item_json.class);
+        id_input.val(item_json.id);
+        var form = modal.find('form');
+        form.attr('method', 'POST');
+        var delete_button = modal.find('a.delete_item');
+        var delete_link = delete_button.attr('href');
+        delete_button.attr('href', delete_link.replace(0, item_json.id));
+        delete_button.show();
+        modal.find('button[type="submit"]').text("Save Changes");
+
+
+        modal.modal("show");
+
     });
 }

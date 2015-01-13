@@ -58,10 +58,11 @@ class Plan(models.Model):
         ('3', 'New')
     )
     status = models.CharField(max_length=1, choices=STATUS_CHOICES)
+    staffs = models.ManyToManyField(StaffProfile)
 
 
 class Event(models.Model):
-    date = models.DateField()
+    date = models.DateTimeField()
     title = models.CharField(max_length=100)
     content = models.TextField()
     location = models.CharField(max_length=100)
@@ -70,13 +71,13 @@ class Event(models.Model):
 class TeachingSchedule(models.Model):
     staff = models.ForeignKey(StaffProfile)
     DAY_CHOICES = (
-        ('Mon', 'Monday'),
-        ('Tue', 'Tuesday'),
-        ('Wed', 'Wednesday'),
-        ('Thu', 'Thursday'),
-        ('Fri', 'Friday'),
-        ('Sat', 'Saturday'),
-        ('Sun', 'Sunday')
+        ('1', 'Monday'),
+        ('2', 'Tuesday'),
+        ('3', 'Wednesday'),
+        ('4', 'Thursday'),
+        ('5', 'Friday'),
+        ('6', 'Saturday'),
+        ('7', 'Sunday')
     )
     day = models.CharField(max_length=3, choices=DAY_CHOICES)
     SESSION_CHOICES = (
@@ -100,6 +101,30 @@ class TeachingSchedule(models.Model):
     subject = models.CharField(max_length=1, choices=SUBJECT_CHOICES)
     classes = models.CharField(max_length=20)
     room = models.CharField(max_length=10)
+
+    def __repr__(self):
+        return "<ScheduleItem day: %r session: %r>" % (self.day, self.session)
+
+    @property
+    def get_subject(self):
+        if self.subject:
+            return dict(TeachingSchedule.SUBJECT_CHOICES)[self.subject]
+        else:
+            return ""
+
+    @property
+    def get_session(self):
+        if self.session:
+            return dict(TeachingSchedule.SESSION_CHOICES)[self.session]
+        else:
+            return ""
+
+    @property
+    def get_day(self):
+        if self.day:
+            return dict(TeachingSchedule.DAY_CHOICES)[self.day]
+        else:
+            return ""
 
 
 class StaffShift(models.Model):

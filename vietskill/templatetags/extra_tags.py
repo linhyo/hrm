@@ -20,3 +20,20 @@ def mod(value, mod_value):
     """Return mod value"""
     result = (value % mod_value) + 1
     return result
+
+@register.filter(name='plan_status')
+def plan_status(value):
+    """Return status string based on status number
+    """
+    status = ['Done', 'Active', 'New']
+    return status[int(value) - 1]
+
+
+@register.filter(name='schedule_class')
+def schedule_class(value):
+    """Return schedule class based on item id
+    """
+    if value == None:
+        return "blank_block"
+    else:
+        return "session" + str((value % 5) + 1)
