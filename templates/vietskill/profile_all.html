@@ -30,25 +30,25 @@
     </div>
     <br><br>
 
-    <div class="row">
-        {% if profiles %}
-            {% for profile in profiles %}
-                <div class="col-sm-3">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title text-center">{{ profile.name }}</h3>
-                        </div>
-                        <div class="panel-body text-center">
-                            <img src="{{ profile.picture.url }}"/><br>
-                            <strong>{{ profile.position }}</strong><br>
-                            <a href="{% url 'vietskill.views.profile_detail' pk=profile.pk %}">
-                                <button type="button" class="btn btn-xs btn-info">View details</button>
-                            </a>
-                        </div>
+    {% if profiles %}
+        {% for profile in profiles %}
+            {% cycle "<div class='row'>" "" "" "" %}
+            <div class="col-sm-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title text-center">{{ profile.name }}</h3>
+                    </div>
+                    <div class="panel-body text-center">
+                        <img src="{{ profile.picture.url }}"/><br>
+                        <strong>{{ profile.position }}</strong><br>
+                        <a href="{% url 'vietskill.views.profile_detail' pk=profile.pk %}">
+                            <button type="button" class="btn btn-xs btn-info">View details</button>
+                        </a>
                     </div>
                 </div>
-            {% endfor %}
-        {% endif %}
-    </div>
+            </div>
+            {% cycle "" "" "" "</div>" %}
+        {% endfor %}
+    {% endif %}
 
 {% endblock %}
