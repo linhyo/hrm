@@ -52,6 +52,12 @@ def profile_edit(request, pk):
         form = ProfileForm(instance=profile)
     context_dict = {'form': form}
     return render(request, 'vietskill/profile_edit.html', context_dict)
+    
+    
+def profile_delete(request, pk):
+    profile = get_object_or_404(StaffProfile, pk=pk)
+    profile.delete()
+    return redirect('vietskill.views.profile_all')
 
 
 #Statistics
